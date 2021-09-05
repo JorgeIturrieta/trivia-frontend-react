@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { HashRouter, Switch } from 'react-router-dom';
 import { PublicRouter } from './PublicRouter';
 import { LoginScreen } from '../components/LoginScreen';
 import { PrivateRouter } from './PrivateRouter';
@@ -10,7 +10,7 @@ export const AppRouter = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   console.log(isLoggedIn);
   return (
-    <Router>
+    <HashRouter>
       <div>
         <Switch>
           <PublicRouter exact path="/login" isLoggedIn={isLoggedIn}>
@@ -23,6 +23,6 @@ export const AppRouter = () => {
           <Redirect to="/" />
         </Switch>
       </div>
-    </Router>
+    </HashRouter>
   );
 };

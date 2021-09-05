@@ -2,7 +2,6 @@ import { useApolloClient, useMutation } from '@apollo/client';
 import { useForm } from '../hooks/useForm';
 import { LOGIN, Ilogin, IloginInput } from '../graphql/mutations/loginUser';
 import { isLoggedInVar } from '../cache';
-
 import { useEffect } from 'react';
 
 export const LoginScreen = () => {
@@ -13,7 +12,7 @@ export const LoginScreen = () => {
     password: '12345',
   });
 
-  const [login, { error, data }] = useMutation<
+  const [login, { data, error }] = useMutation<
     { login: Ilogin },
     { loginInput: IloginInput }
   >(LOGIN, {
@@ -29,8 +28,12 @@ export const LoginScreen = () => {
 
   const submit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    await login();
-    await client.resetStore();
+    try {
+      await login();
+      await client.resetStore();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -65,7 +68,7 @@ export const LoginScreen = () => {
           <pre> {JSON.stringify({ token: data.login.token }, null, 2)}</pre>
         </code>
       )}
-      {error ? <p>Oh no! {error.message}</p> : null}
+      {error ? <p>Oh no! {JSON.stringify(error.message, null, 2)}</p> : null}
     </>
   );
 };
