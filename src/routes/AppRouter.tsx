@@ -6,6 +6,7 @@ import { Home } from '../components/Home';
 import { Redirect } from 'react-router';
 import { useReactiveVar } from '@apollo/client';
 import { isLoggedInVar } from '../cache';
+import { RandomQuestion } from '../components/RandomQuestion';
 export const AppRouter = () => {
   const isLoggedIn = useReactiveVar(isLoggedInVar);
   console.log(isLoggedIn);
@@ -19,6 +20,14 @@ export const AppRouter = () => {
 
           <PrivateRouter exact path="/" isLoggedIn={isLoggedIn}>
             <Home />
+          </PrivateRouter>
+
+          <PrivateRouter
+            exact
+            path="/questions/:categoryId"
+            isLoggedIn={isLoggedIn}
+          >
+            <RandomQuestion />
           </PrivateRouter>
           <Redirect to="/" />
         </Switch>
