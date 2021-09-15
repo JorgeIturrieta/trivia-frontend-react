@@ -1,9 +1,13 @@
 import styled from 'styled-components';
-
-export const Button = styled.button`
+interface ButtonProps {
+  readonly inputColor: string;
+}
+export const Button = styled.button<ButtonProps>`
   display: block;
-  background-color: bisque;
+  background-color: ${(props) =>
+    props.inputColor ? props.inputColor : 'bisque'};
   font: 20px sans-serif;
+  cursor: pointer;
   font-size: 1em;
   margin: 1em;
   padding: 1em 1em;
