@@ -5,6 +5,7 @@ export const GET_RANDOM_QUESTIONS = gql`
     randomQuestions(randomInput: $randomInput) {
       title
       correctAnswer
+      image
       answers {
         id
         title
@@ -22,6 +23,7 @@ export interface IAnswer {
 }
 export interface IRandomQuestion {
   title: string;
+  image: string;
   correctAnswer: string;
   answers: IAnswer[];
 }

@@ -1,7 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { IRandomQuestion } from '../graphql/queries/randomQuestion';
 import { useState } from 'react';
-import { Button } from './Button';
+import { Button, NextButton } from './Button';
+import { userScoreVar } from '../cache';
+import {
+  ContainerAnswers,
+  ContainerBtn,
+  ContainerImg,
+  ContainerTitle,
+} from './Containers';
 
 type AnswerPros = {
   question: IRandomQuestion;
@@ -17,7 +24,9 @@ export const Answers: FunctionComponent<AnswerPros> = ({
   const [color, setColor] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const handleNextQuestion = () => {
+    setColor('');
     setNextQuestion((c) => c + 1);
+    userScoreVar(score);
     setLoadNextQuestion(false);
     setIsClicked(false);
   };
@@ -28,41 +37,49 @@ export const Answers: FunctionComponent<AnswerPros> = ({
       setAnswerSelected(id);
       if (id === question.correctAnswer) {
         setScore(score + 10);
-        setColor('green');
+
+        setColor('#48e3b0');
         console.log('Respuesta correcta :)');
       } else {
-        setColor('red');
+        setColor('#E55665');
       }
     }
   };
 
   return (
-    <div>
-      <h2 style={{ color: 'red' }}>{question.title}</h2>
-      <h3>score:{score}</h3>
-
-      <div>
+    <>
+      <ContainerTitle backgroundColor={color}>
+        <h2>{question.title}</h2>
+      </ContainerTitle>
+      <ContainerImg src={question.image} alt={question.title} />
+      <ContainerAnswers>
         {question.answers.map((a) => {
           return (
-            <Button
-              inputColor={
-                (a.id === answerSelected ? color : '') ||
-                (a.id === question.correctAnswer && isClicked ? 'green' : '')
-              }
-              key={a.id}
-              onClick={() => handleAnswer(a.id)}
-            >
-              {a.title}
-            </Button>
+            <ContainerBtn key={a.id}>
+              <Button
+                inputColor={
+                  (a.id === answerSelected ? color : '') ||
+                  (a.id === question.correctAnswer && isClicked
+                    ? '#48e3b0'
+                    : '')
+                }
+                key={a.id}
+                onClick={() => handleAnswer(a.id)}
+              >
+                {a.title}
+              </Button>
+            </ContainerBtn>
           );
         })}
-      </div>
+      </ContainerAnswers>
 
       {loadNextQuestion && (
-        <div>
-          <button onClick={handleNextQuestion}>Continuar</button>
-        </div>
+        <>
+          <NextButton onClick={handleNextQuestion}>
+            Siguiente pregunta
+          </NextButton>
+        </>
       )}
-    </div>
+    </>
   );
 };

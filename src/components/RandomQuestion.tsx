@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useState } from 'react';
 import {
   IRandomQuestionData,
@@ -7,7 +7,14 @@ import {
   IRandomQuestionInput,
 } from '../graphql/queries/randomQuestion';
 import { Answers } from './Answers';
-import { LogoutScreen } from './LogoutScreen';
+// import { LogoutScreen } from './LogoutScreen';
+import { userScoreVar } from '../cache';
+import {
+  ADD_SCORE,
+  IAddScore,
+  IScoreInput,
+} from '../graphql/mutations/addScore';
+import { ContainerQuestion } from './Containers';
 
 type Params = {
   categoryId: string;
@@ -24,15 +31,27 @@ export const RandomQuestion = () => {
   });
 
   const [count, setCount] = useState(0);
+  const score = useReactiveVar(userScoreVar);
+
+  const [addScore] = useMutation<
+    { addScore: IAddScore },
+    { scoreInput: IScoreInput }
+  >(ADD_SCORE, {
+    variables: { scoreInput: { idCategory: categoryId, time: 0, score } },
+  });
+
+  const handleScore = async () => {
+    await addScore();
+    console.log(`Score total: ${score}`);
+  };
 
   return (
-    <div>
-      <h1>RandomQuestion</h1>
-      <LogoutScreen />
+    <>
+      {/* <LogoutScreen /> */}
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <div>
+        <ContainerQuestion>
           {data?.randomQuestions && (
             <>
               {data?.randomQuestions.length - 1 >= count ? (
@@ -41,13 +60,16 @@ export const RandomQuestion = () => {
                   setNextQuestion={setCount}
                 />
               ) : (
-                <p>Felcitaciones trivia completada!</p>
+                <>
+                  <p>Felcitaciones trivia completada!</p>
+                  <button onClick={handleScore}> Ver resultado</button>
+                </>
               )}
             </>
           )}
-        </div>
+        </ContainerQuestion>
       )}
       {error && <span>{error.message}</span>}
-    </div>
+    </>
   );
 };
