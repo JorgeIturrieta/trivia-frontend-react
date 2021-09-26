@@ -5,6 +5,7 @@ import { App } from './App';
 import { ApolloClient, createHttpLink, ApolloProvider } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { cache } from './cache';
+import './css/styles.css';
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/',
 });

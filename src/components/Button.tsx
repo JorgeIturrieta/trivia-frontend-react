@@ -24,4 +24,5 @@ export const NextButton = styled.button`
   margin: 1em;
   padding: 1em 1em;
   border-radius: 10px;
+  cursor: pointer;
 `;
