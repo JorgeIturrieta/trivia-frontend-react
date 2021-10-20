@@ -8,7 +8,7 @@ export const LogoutScreen = () => {
   };
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <span onClick={handleLogout}>Cerrar Sesión</span>
     </div>
   );
 };

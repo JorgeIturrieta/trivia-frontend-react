@@ -2,31 +2,40 @@ import React, { FunctionComponent } from 'react';
 import { IRandomQuestion } from '../graphql/queries/randomQuestion';
 import { useState } from 'react';
 import { Button, NextButton } from './Button';
-import { userScoreVar } from '../cache';
+import { userScoreVar, userTimeVar } from '../cache';
 import {
+  NumberQuestion,
+  Score,
   ContainerAnswers,
   ContainerBtn,
-  ContainerImg,
+  ImgQuestion,
   ContainerTitle,
+  ContainerImg,
 } from './Containers';
+import { Timer } from './Timer';
+import { Title } from './Containers';
 
-type AnswerPros = {
+type AnswerProps = {
   question: IRandomQuestion;
   setNextQuestion: React.Dispatch<React.SetStateAction<number>>;
+  numberQuestion: number;
 };
-export const Answers: FunctionComponent<AnswerPros> = ({
+export const Answers: FunctionComponent<AnswerProps> = ({
   question,
   setNextQuestion,
+  numberQuestion,
 }) => {
   const [loadNextQuestion, setLoadNextQuestion] = useState(false);
   const [score, setScore] = useState(0);
   const [answerSelected, setAnswerSelected] = useState('');
   const [color, setColor] = useState('');
   const [isClicked, setIsClicked] = useState(false);
+  const [time, setTime] = useState(0);
   const handleNextQuestion = () => {
     setColor('');
     setNextQuestion((c) => c + 1);
     userScoreVar(score);
+    userTimeVar(time);
     setLoadNextQuestion(false);
     setIsClicked(false);
   };
@@ -49,9 +58,18 @@ export const Answers: FunctionComponent<AnswerPros> = ({
   return (
     <>
       <ContainerTitle backgroundColor={color}>
-        <h2>{question.title}</h2>
+        <Title>{question.title}</Title>
       </ContainerTitle>
-      <ContainerImg src={question.image} alt={question.title} />
+
+      <ContainerImg>
+        <NumberQuestion>{numberQuestion}/10</NumberQuestion>
+
+        <Timer time={time} setTime={setTime} />
+
+        <Score>{score} puntos</Score>
+        <ImgQuestion src={question.image} alt={question.title} />
+      </ContainerImg>
+
       <ContainerAnswers>
         {question.answers.map((a) => {
           return (
@@ -75,9 +93,7 @@ export const Answers: FunctionComponent<AnswerPros> = ({
 
       {loadNextQuestion && (
         <>
-          <NextButton onClick={handleNextQuestion}>
-            Siguiente pregunta
-          </NextButton>
+          <NextButton onClick={handleNextQuestion}>Continuar</NextButton>
         </>
       )}
     </>

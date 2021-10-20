@@ -2,8 +2,22 @@
 
 * {
   box-sizing: border-box;
+  font-family: 'Red Hat Display', sans-serif;
 }
 body {
+  background-color: rgba(202, 198, 198, 0.61);
   margin: 0;
-  font-family: 'Red Hat Display', sans-serif;
+}
+.carousel {
+  text-align: center;
+}
+.carousel.carousel-slider {
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 2em;
+  max-width: 700px;
+}
+.carousel .slide .legend {
+  background-color: #8cc7f7;
+  color: black;
 }

@@ -1,13 +1,12 @@
 import React from 'react';
 import { CategoryScreen } from './CategoryScreen';
-import { LogoutScreen } from './LogoutScreen';
+import { Menu } from './Menu';
 
 export const Home = () => {
   return (
-    <div>
-      <h1>Bienvenido a la app de Trivia</h1>
-      <LogoutScreen />
+    <>
+      <Menu />
       <CategoryScreen />
-    </div>
+    </>
   );
 };

@@ -1,6 +1,5 @@
 import { useApolloClient, useMutation } from '@apollo/client';
 import { useForm } from '../hooks/useForm';
-import { LOGIN, Ilogin, IloginInput } from '../graphql/mutations/loginUser';
 import { isLoggedInVar } from '../cache';
 import { useEffect } from 'react';
 import { AuthContainer } from './AuthContainer';
@@ -8,25 +7,31 @@ import { AuthBoxContainer } from './AuthBoxContainer';
 import { AuthInput } from './AuthInput';
 import { AuthBtn } from './AuthBtn';
 import { TitleAuth } from './TitleAuth';
-import { Link } from 'react-router-dom';
-export const LoginScreen = () => {
+import {
+  IRegister,
+  IRegisterInput,
+  REGISTER,
+} from '../graphql/mutations/registerUser';
+
+export const RegisterScreen = () => {
   const client = useApolloClient();
 
-  const { email, password, onChange } = useForm({
-    email: 'test@test.com',
-    password: '12345',
+  const { username, email, password, onChange } = useForm({
+    username: '',
+    email: '',
+    password: '',
   });
 
-  const [login, { data, error }] = useMutation<
-    { login: Ilogin },
-    { loginInput: IloginInput }
-  >(LOGIN, {
-    variables: { loginInput: { password, username: email } },
+  const [signUp, { data, error }] = useMutation<
+    { signUp: IRegister },
+    { signUpInput: IRegisterInput }
+  >(REGISTER, {
+    variables: { signUpInput: { password, username, email } },
   });
 
   useEffect(() => {
-    if (data?.login) {
-      localStorage.setItem('token', data.login.token);
+    if (data?.signUp) {
+      localStorage.setItem('token', data.signUp.token);
       isLoggedInVar(!!localStorage.getItem('token'));
     }
   }, [data]);
@@ -34,7 +39,7 @@ export const LoginScreen = () => {
   const submit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     try {
-      await login();
+      await signUp();
       await client.resetStore();
     } catch (error) {
       console.log(error);
@@ -46,6 +51,14 @@ export const LoginScreen = () => {
       <AuthBoxContainer>
         <TitleAuth>Trivia App</TitleAuth>
         <form onSubmit={submit}>
+          <AuthInput
+            type="text"
+            name="username"
+            placeholder="nombre de usuario"
+            value={username}
+            autoComplete="off"
+            onChange={({ target }) => onChange('username', target.value)}
+          />
           <AuthInput
             type="text"
             name="email"
@@ -63,11 +76,7 @@ export const LoginScreen = () => {
             onChange={({ target }) => onChange('password', target.value)}
           />
 
-          <AuthBtn type="submit"> Iniciar sesión </AuthBtn>
-          <hr />
-          <Link to="/register" className="link">
-            Registrarse
-          </Link>
+          <AuthBtn type="submit"> Registrar </AuthBtn>
         </form>
         {/* <code>
           <pre> {JSON.stringify({ email, password }, null, 2)}</pre>

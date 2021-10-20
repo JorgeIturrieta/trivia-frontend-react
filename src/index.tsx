@@ -5,9 +5,12 @@ import { App } from './App';
 import { ApolloClient, createHttpLink, ApolloProvider } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { cache } from './cache';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './css/styles.css';
+import { URI } from './utils/config-env';
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/',
+  uri: URI,
 });
 
 const authLink = setContext((_, { headers }) => {
