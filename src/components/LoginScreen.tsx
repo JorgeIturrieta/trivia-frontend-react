@@ -13,8 +13,8 @@ export const LoginScreen = () => {
   const client = useApolloClient();
 
   const { email, password, onChange } = useForm({
-    email: 'test@test.com',
-    password: '12345',
+    email: '',
+    password: '',
   });
 
   const [login, { data, error }] = useMutation<
